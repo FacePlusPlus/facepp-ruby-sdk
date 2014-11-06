@@ -156,7 +156,8 @@ class FacePP
           req.body = form.inspect
           req['Content-Length'] = req.body.size
         end
-        res = Net::HTTP.new('api.faceplusplus.com').request(req).body
+        server = options.fetch :server, 'api.faceplusplus.com'
+        res = Net::HTTP.new(server).request(req).body
         decode ? JSON.load(res) : res
       end
     end

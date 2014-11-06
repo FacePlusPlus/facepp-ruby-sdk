@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'facepp'
-  s.version = '0.0'
+  s.version = '0.2'
   s.platform = Gem::Platform::RUBY
   s.summary = 'A Ruby interface to the FacePlusPlus API.'
   s.description = 'FacePlusPlus API Reference: http://faceplusplus.com/en/docs/getting_started'
@@ -13,5 +13,6 @@ Gem::Specification.new do |s|
   s.files += Dir.glob 'spec/**/*'
   s.require_paths = ['lib']
 
+  s.add_dependency 'mime-types'
   s.add_development_dependency 'rspec'
 end
