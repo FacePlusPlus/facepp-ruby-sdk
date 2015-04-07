@@ -92,34 +92,47 @@ class FacePP
 
   APIS = [
     '/detection/detect',
+    '/detection/landmark',
 
-    '/info/get_image',
-    '/info/get_face',
-    '/info/get_session',
-    '/info/get_quota',
-    '/info/get_person_list',
-    '/info/get_group_list',
-    '/info/get_app',
+    '/train/verify',
+    '/train/search',
+    '/train/identify',
+
+    '/recognition/compare',
+    '/recognition/verify',
+    '/recognition/identify',
+    '/recognition/search',
+
+    '/grouping/grouping',
 
     '/person/create',
     '/person/delete',
     '/person/add_face',
     '/person/remove_face',
-    '/person/get_info',
     '/person/set_info',
+    '/person/get_info',
+
+    '/faceset/create',
+    '/faceset/delete',
+    '/faceset/add_face',
+    '/faceset/remove_face',
+    '/faceset/set_info',
+    '/faceset/get_info',
 
     '/group/create',
     '/group/delete',
     '/group/add_person',
     '/group/remove_person',
-    '/group/get_info',
     '/group/set_info',
+    '/group/get_info',
 
-    '/recognition/compare',
-    '/recognition/train',
-    '/recognition/verify',
-    '/recognition/recognize',
-    '/recognition/search',
+    '/info/get_image',
+    '/info/get_face',
+    '/info/get_person_list',
+    '/info/get_faceset_list',
+    '/info/get_group_list',
+    '/info/get_session',
+    '/info/get_app',
   ]
 
   def initialize(key, secret, options={})
@@ -156,7 +169,7 @@ class FacePP
           req.body = form.inspect
           req['Content-Length'] = req.body.size
         end
-        res = Net::HTTP.new('api.faceplusplus.com').request(req).body
+        res = Net::HTTP.new('apicn.faceplusplus.com').request(req).body
         decode ? JSON.load(res) : res
       end
     end
