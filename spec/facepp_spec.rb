@@ -63,11 +63,5 @@ describe FacePP do
       res = api.info.get_group_list
       res.should have_key 'group'
     end
-
-    it 'can get_quota' do
-      res = api.info.get_quota
-      res.should have_key 'QUOTA_ALL'
-      res.should have_key 'QUOTA_SEARCH'
-    end
   end
 end
