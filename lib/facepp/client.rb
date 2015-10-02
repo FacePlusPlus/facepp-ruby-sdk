@@ -124,6 +124,7 @@ class FacePP
 
   def initialize(key, secret, options={})
     decode = options.fetch :decode, true
+    api_host = options.fetch :host, 'api.faceplusplus.com'
     make_hash = lambda { Hash.new {|h,k| h[k] = make_hash.call make_hash } }
 
     APIS.each do |api|
@@ -156,7 +157,7 @@ class FacePP
           req.body = form.inspect
           req['Content-Length'] = req.body.size
         end
-        res = Net::HTTP.new('api.faceplusplus.com').request(req).body
+        res = Net::HTTP.new(api_host).request(req).body
         decode ? JSON.load(res) : res
       end
     end
