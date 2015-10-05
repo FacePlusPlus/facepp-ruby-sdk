@@ -101,12 +101,21 @@ class FacePP
     '/info/get_group_list',
     '/info/get_app',
 
+    '/faceset/create',
+    '/faceset/delete',
+    '/faceset/add_face',
+    '/faceset/remove_face',
+    '/faceset/set_info',
+    '/faceset/get_info',
+
     '/person/create',
     '/person/delete',
     '/person/add_face',
     '/person/remove_face',
     '/person/get_info',
     '/person/set_info',
+
+    '/grouping/grouping',
 
     '/group/create',
     '/group/delete',
