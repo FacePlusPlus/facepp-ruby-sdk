@@ -92,6 +92,7 @@ class FacePP
 
   APIS = [
     '/detection/detect',
+    '/detection/landmark',
 
     '/info/get_image',
     '/info/get_face',
@@ -114,6 +115,10 @@ class FacePP
     '/person/remove_face',
     '/person/get_info',
     '/person/set_info',
+
+    '/train/verify',
+    '/train/search',
+    '/train/identify',
 
     '/grouping/grouping',
 
