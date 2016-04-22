@@ -41,6 +41,21 @@ unless URI.respond_to? :encode_www_form
 end
 
 class FacePP
+
+  class HttpException < StandardError
+    def initialize(reponse)
+      @response = response
+    end
+
+    def code
+      @response.code
+    end
+
+    def to_s
+      "HTTP #{code}: #{@response.inspect}"
+    end
+  end
+
   class MultiPart
     def initialize
       @fields = []
@@ -165,14 +180,19 @@ class FacePP
           end
         end
 
-        req = Net::HTTP::Post.new "#{api}?#{URI::encode_www_form(fields)}"
+        req = Net::HTTP::Post.new("#{api}?#{URI::encode_www_form(fields)}")
         if form.has_file?
           req.set_content_type form.content_type
           req.body = form.inspect
           req['Content-Length'] = req.body.size
         end
-        res = Net::HTTP.new(api_host).request(req).body
-        decode ? JSON.load(res) : res
+
+        response = Net::HTTP.new(api_host).request(req)
+        if !response.kind_of?(Net::HTTPSuccess)
+          raise(HttpException.new(response))
+        end
+
+        decode ? JSON.load(response.body) : response.body
       end
     end
   end
