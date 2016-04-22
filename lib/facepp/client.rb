@@ -41,6 +41,21 @@ unless URI.respond_to? :encode_www_form
 end
 
 class FacePP
+
+  class HttpException < StandardError
+    def initialize(reponse)
+      @response = response
+    end
+
+    def code
+      @response.code
+    end
+
+    def to_s
+      "HTTP #{code}: #{@response.inspect}"
+    end
+  end
+
   class MultiPart
     def initialize
       @fields = []
@@ -92,6 +107,7 @@ class FacePP
 
   APIS = [
     '/detection/detect',
+    '/detection/landmark',
 
     '/info/get_image',
     '/info/get_face',
@@ -101,12 +117,25 @@ class FacePP
     '/info/get_group_list',
     '/info/get_app',
 
+    '/faceset/create',
+    '/faceset/delete',
+    '/faceset/add_face',
+    '/faceset/remove_face',
+    '/faceset/set_info',
+    '/faceset/get_info',
+
     '/person/create',
     '/person/delete',
     '/person/add_face',
     '/person/remove_face',
     '/person/get_info',
     '/person/set_info',
+
+    '/train/verify',
+    '/train/search',
+    '/train/identify',
+
+    '/grouping/grouping',
 
     '/group/create',
     '/group/delete',
@@ -124,6 +153,7 @@ class FacePP
 
   def initialize(key, secret, options={})
     decode = options.fetch :decode, true
+    api_host = options.fetch :host, 'api.faceplusplus.com'
     make_hash = lambda { Hash.new {|h,k| h[k] = make_hash.call make_hash } }
 
     APIS.each do |api|
@@ -150,14 +180,19 @@ class FacePP
           end
         end
 
-        req = Net::HTTP::Post.new "#{api}?#{URI::encode_www_form(fields)}"
+        req = Net::HTTP::Post.new("#{api}?#{URI::encode_www_form(fields)}")
         if form.has_file?
           req.set_content_type form.content_type
           req.body = form.inspect
           req['Content-Length'] = req.body.size
         end
-        res = Net::HTTP.new('api.faceplusplus.com').request(req).body
-        decode ? JSON.load(res) : res
+
+        response = Net::HTTP.new(api_host).request(req)
+        if !response.kind_of?(Net::HTTPSuccess)
+          raise(HttpException.new(response))
+        end
+
+        decode ? JSON.load(response.body) : response.body
       end
     end
   end
